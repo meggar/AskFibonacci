@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title> Ask Fibonacci! </title>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+
+    <body>
+	<div id="app_title">Ask Fibonacci!</div>
+
+        <div id="input_form_div">
+	  <form id="input_form" onsubmit="return user_entered_the_n_value(this)">
+            <label for="n">What is your 'n' value? </label>
+            <input type="text" id="n" name="n" autocomplete="off" />
+            <input type="submit" id="input_form_submit" value="Submit" />
+	  </form>
+        </div>
+
+        <div id="background_image_div">
+          <img id="background_img" src="images/fibonacci.png">
+        </div>
+
+        <div id="bubble_div">
+          <img id="bubble" src="images/bubble.png" />
+          <div id="bubble_text"> </div>
+        </div>
+
+        <script type = "text/javascript">
+
+            var background_image = document.getElementById("background_img");
+            var bubble_div       = document.getElementById("bubble_div");
+            var bubble_text      = document.getElementById("bubble_text");
+
+
+            function fib(n) {
+                var x = 0, y = 1, i = 0;
+                while (i < n) {
+                    temp = x + y;
+                    x = y;
+                    y = temp;
+                    i += 1;
+                }
+                return x
+            }
+
+
+            function get_adjusted_font_size(text) {
+		// fib(n) gets big fast, larger numbers need smaller font to fit in the bubble.
+
+                adjusted_size = 28 * (10 / text.length);
+                adjusted_size_in_range_13_to_28 = Math.max(13, Math.min(28, adjusted_size));
+
+                return parseInt(adjusted_size_in_range_13_to_28).toString() + 'pt';
+            }
+
+
+            function fibonacci_says(text) {
+
+                 // Fibonacci starts running his mouth.
+                 setTimeout(function(){
+			background_image.src        = "images/fibonacci_agape.png";
+                        bubble_text.innerHTML       = text;
+                        bubble_text.style.fontSize  = get_adjusted_font_size(text);
+			bubble_div.style.visibility = "visible";
+		 }, 500);
+
+                 // Fibonacci shuts up a few seconds later.
+                 setTimeout(function(){ 
+                        background_image.src        = "images/fibonacci.png"; 
+			bubble_div.style.visibility = "hidden";
+                 }, 2000);
+            }
+
+            function user_entered_the_n_value(input_form) {
+
+                 n = input_form.elements.n.value;
+
+                 if(isNaN(n) || n.trim() == '' || parseInt(n) < 0) {
+
+                     // invalid input: only integer >= 0 is valid for n
+                     fibonacci_says("srsly?");
+
+                 } else {
+
+                     // valid input.
+                     fib_n = fib(n);
+                     fibonacci_says(fib_n.toString());
+                 }
+
+                 return false;
+            }
+
+        </script>
+
+    </body>
+</html>
